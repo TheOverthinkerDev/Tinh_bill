@@ -3,7 +3,7 @@ const prices = {
   banhmi: 6000,
   nemnuong: 7000,
   nuoc: 10000,
-  banhmiThit: 14000  // Giá cơ bản cho bánh mì kẹp thịt (đã bao gồm 1 miếng thịt)
+  banhmiThit: 14000  // Giá cơ bản cho bánh mì kẹp thịt (bao gồm 1 miếng thịt)
 };
 
 const inputs = document.querySelectorAll('input[type="number"]');
@@ -23,7 +23,6 @@ function calculateTotal() {
   const soLuongBanh = parseInt(document.getElementById('banhmiThit').value) || 0;
   const thitTrongBanh = parseInt(document.getElementById('thitTrongBanh').value) || 1;
   if (soLuongBanh > 0) {
-    // Giá bánh mì kẹp thịt: 14k cho 1 ổ + (số thịt thêm - 1) * 11k
     const giaMotBanh = prices.banhmiThit + ((thitTrongBanh - 1) * prices.thit);
     total += soLuongBanh * giaMotBanh;
   }
