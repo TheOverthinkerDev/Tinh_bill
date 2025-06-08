@@ -24,11 +24,12 @@ h1 {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 1rem; /* Khoảng cách giữa label và input */
 }
 
 .label {
-  flex: 1;
-  font-size: 1.3rem;
+  flex: 1.5;
+  font-size: 1.3rem; /* Giữ nguyên cỡ chữ */
   font-weight: bold;
 }
 
