@@ -24,7 +24,7 @@ h1 {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 1.5rem; /* Khoảng cách vừa phải giữa label và input */
+  gap: 1rem; /* Khoảng cách nhỏ hơn giữa label và input */
 }
 
 .label {
@@ -40,7 +40,7 @@ h1 {
 }
 
 .item input {
-  flex: 0 0 80px; /* Kích thước ô nhập nhỏ hơn */
+  flex: 0 0 80px; /* Kích thước ô nhập ngắn hơn */
   padding: 0.7rem;
   font-size: 1.3rem;
   border: 1px solid #ccc;
@@ -53,23 +53,4 @@ h1 {
   font-size: 2rem;
   font-weight: bold;
   margin: 2rem 0 1rem 0;
-  padding: 0.5rem;
-  border-top: 2px solid #000;
-}
-
-button {
-  display: block;
-  width: 100%;
-  padding: 1rem;
-  font-size: 1.5rem;
-  background-color: #000;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-button:hover {
-  background-color: #333;
-}
+  padding: 0.
