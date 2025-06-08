@@ -24,7 +24,7 @@ h1 {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 2rem; /* Khoảng cách lớn hơn giữa label và input */
+  gap: 1.5rem; /* Khoảng cách vừa phải giữa label và input */
 }
 
 .label {
@@ -40,7 +40,7 @@ h1 {
 }
 
 .item input {
-  flex: 1;
+  flex: 0 0 80px; /* Kích thước ô nhập nhỏ hơn */
   padding: 0.7rem;
   font-size: 1.3rem;
   border: 1px solid #ccc;
