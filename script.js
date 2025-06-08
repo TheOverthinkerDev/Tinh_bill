@@ -31,7 +31,6 @@ function calculateTotal() {
   total += nemNuong * PRICES.nemNuong;
   total += nuoc * PRICES.nuoc;
 
-  // Bánh mì kẹp thịt = 14k + (số thịt bổ sung * 11k)
   total += banhMiThit * (PRICES.banhMiThitBase + ((soThitBanhMi - 1) * PRICES.thit));
 
   totalDisplay.textContent = `TỔNG: ${total.toLocaleString()} VND`;
@@ -51,11 +50,11 @@ function calculateTotal() {
 
 // Hàm xóa kết quả
 function clearAll() {
-  thitInput.value = 0;
-  banhMiInput.value = 0;
-  nemNuongInput.value = 0;
-  nuocInput.value = 0;
-  banhMiThitInput.value = 0;
+  thitInput.value = '';
+  banhMiInput.value = '';
+  nemNuongInput.value = '';
+  nuocInput.value = '';
+  banhMiThitInput.value = '';
   soThitBanhMiInput.value = 1;
   totalDisplay.textContent = 'TỔNG: 0 VND';
 }
