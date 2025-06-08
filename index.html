@@ -8,36 +8,53 @@
 </head>
 <body>
   <div class="container">
-    <h1>Tính Bill</h1>
+    <h1>TÍNH BILL</h1>
     <form id="billForm">
       <div class="item">
-        <label for="thit">Thịt (11.000đ):</label>
-        <input type="number" id="thit" min="0" value="0">
+        <div class="label">
+          THỊT
+          <div class="price">(11.000đ)</div>
+        </div>
+        <input type="number" id="thit" min="0" value="0" inputmode="numeric">
       </div>
       <div class="item">
-        <label for="banhmi">Bánh mì (6.000đ):</label>
-        <input type="number" id="banhmi" min="0" value="0">
+        <div class="label">
+          BÁNH MÌ
+          <div class="price">(6.000đ)</div>
+        </div>
+        <input type="number" id="banhmi" min="0" value="0" inputmode="numeric">
       </div>
       <div class="item">
-        <label for="nemnuong">Nem nướng (7.000đ):</label>
-        <input type="number" id="nemnuong" min="0" value="0">
+        <div class="label">
+          NEM NƯỚNG
+          <div class="price">(7.000đ)</div>
+        </div>
+        <input type="number" id="nemnuong" min="0" value="0" inputmode="numeric">
       </div>
       <div class="item">
-        <label for="nuoc">Nước (10.000đ):</label>
-        <input type="number" id="nuoc" min="0" value="0">
+        <div class="label">
+          NƯỚC
+          <div class="price">(10.000đ)</div>
+        </div>
+        <input type="number" id="nuoc" min="0" value="0" inputmode="numeric">
       </div>
       <div class="item">
-        <label for="banhmiThit">Bánh mì kẹp thịt (14.000đ + thêm thịt):</label>
-        <input type="number" id="banhmiThit" min="0" value="0">
+        <div class="label">
+          BÁNH MÌ KẸP THỊT
+          <div class="price">(14.000đ + thêm thịt)</div>
+        </div>
+        <input type="number" id="banhmiThit" min="0" value="0" inputmode="numeric">
       </div>
       <div class="item">
-        <label for="thitTrongBanh">Số lượng thịt/ổ bánh:</label>
-        <input type="number" id="thitTrongBanh" min="1" value="1">
+        <div class="label">
+          SỐ THỊT/Ổ
+        </div>
+        <input type="number" id="thitTrongBanh" min="1" value="1" inputmode="numeric">
       </div>
       <div class="total">
-        Tổng: <span id="total">0</span> VND
+        TỔNG: <span id="total">0</span> VND
       </div>
-      <button type="button" id="clearBtn">Clear</button>
+      <button type="button" id="clearBtn">XÓA</button>
     </form>
   </div>
   <script src="script.js"></script>
