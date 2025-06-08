@@ -24,25 +24,23 @@ h1 {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 1rem; /* khoảng cách giữa label và input */
+  gap: 1rem; /* Khoảng cách nhỏ hơn giữa label và input */
 }
 
 .label {
   flex: 1.5;
-  font-size: 1.3rem; /* giữ nguyên cỡ chữ */
+  font-size: 1.3rem; /* Giữ nguyên cỡ chữ */
   font-weight: bold;
-  line-height: 1.3;
 }
 
 .price {
-  display: block;
   font-size: 0.9rem;
   font-weight: normal;
   margin-top: 0.2rem;
 }
 
 .item input {
-  flex: 0 0 80px; /* ô nhập dữ liệu ngắn hơn */
+  flex: 0 0 80px; /* Kích thước ô nhập ngắn hơn */
   padding: 0.7rem;
   font-size: 1.3rem;
   border: 1px solid #ccc;
