@@ -24,7 +24,7 @@ h1 {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 1rem; /* Khoảng cách giữa label và input */
+  gap: 2rem; /* Khoảng cách lớn hơn giữa label và input */
 }
 
 .label {
