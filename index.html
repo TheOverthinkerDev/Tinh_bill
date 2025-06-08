@@ -1,66 +1,62 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TÍNH BILL</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tính Bill</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="container">
     <h1>TÍNH BILL</h1>
-
-    <div class="item">
-      <div class="label">
-        THỊT
-        <span class="price">(11.000đ)</span>
+    <form id="billForm">
+      <div class="item">
+        <div class="label">
+          THỊT
+          <div class="price">(11.000đ)</div>
+        </div>
+        <input type="number" id="thit" min="0" value="0" inputmode="numeric">
       </div>
-      <input type="number" id="thit" value="0" />
-    </div>
-
-    <div class="item">
-      <div class="label">
-        BÁNH MÌ
-        <span class="price">(6.000đ)</span>
+      <div class="item">
+        <div class="label">
+          BÁNH MÌ
+          <div class="price">(6.000đ)</div>
+        </div>
+        <input type="number" id="banhmi" min="0" value="0" inputmode="numeric">
       </div>
-      <input type="number" id="banhMi" value="0" />
-    </div>
-
-    <div class="item">
-      <div class="label">
-        NEM NƯỚNG
-        <span class="price">(7.000đ)</span>
+      <div class="item">
+        <div class="label">
+          NEM NƯỚNG
+          <div class="price">(7.000đ)</div>
+        </div>
+        <input type="number" id="nemnuong" min="0" value="0" inputmode="numeric">
       </div>
-      <input type="number" id="nemNuong" value="0" />
-    </div>
-
-    <div class="item">
-      <div class="label">
-        NƯỚC
-        <span class="price">(10.000đ)</span>
+      <div class="item">
+        <div class="label">
+          NƯỚC
+          <div class="price">(10.000đ)</div>
+        </div>
+        <input type="number" id="nuoc" min="0" value="0" inputmode="numeric">
       </div>
-      <input type="number" id="nuoc" value="0" />
-    </div>
-
-    <div class="item">
-      <div class="label">
-        BÁNH MÌ<br>KẸP THỊT
-        <span class="price">(14.000đ + thêm thịt)</span>
+      <div class="item">
+        <div class="label">
+          BÁNH MÌ KẸP THỊT
+          <div class="price">(14.000đ + thêm thịt)</div>
+        </div>
+        <input type="number" id="banhmiThit" min="0" value="0" inputmode="numeric">
       </div>
-      <input type="number" id="banhMiThit" value="0" />
-    </div>
-
-    <div class="item">
-      <div class="label">
-        SỐ THỊT/Ổ
+      <div class="item">
+        <div class="label">
+          SỐ THỊT/Ổ
+        </div>
+        <input type="number" id="thitTrongBanh" min="1" value="1" inputmode="numeric">
       </div>
-      <input type="number" id="soThitBanhMi" value="1" />
-    </div>
-
-    <div class="total" id="total">TỔNG: 0 VND</div>
-    <button onclick="clearAll()">XÓA</button>
+      <div class="total">
+        TỔNG: <span id="total">0</span> VND
+      </div>
+      <button type="button" id="clearBtn">XÓA</button>
+    </form>
   </div>
-
   <script src="script.js"></script>
 </body>
 </html>
