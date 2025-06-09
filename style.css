@@ -124,6 +124,14 @@ button:hover {
   display: inline-block;
 }
 
+/* Logo chính trên đầu trang */
+.logo-img {
+  display: block;
+  margin: 0 auto 1rem auto;      /* <-- chỉnh khoảng cách trên/dưới logo tại đây (giảm margin dưới, bỏ margin trên) */
+  max-width: 270px;              /* <-- chỉnh chiều rộng tối đa logo tại đây (tăng kích thước) */
+  height: auto;
+}
+
 @media (max-width: 600px) {
   .container {
     max-width: 98vw;
