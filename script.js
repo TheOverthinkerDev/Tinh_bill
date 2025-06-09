@@ -7,6 +7,7 @@ const banhMiThitInput = document.getElementById('banhMiThit');
 const soThitBanhMiInput = document.getElementById('soThitBanhMi');
 const soThitBanhMiItem = document.getElementById('soThitBanhMiItem');
 const totalDisplay = document.getElementById('total');
+const subtotalsDiv = document.getElementById('subtotals');
 
 // Giá tiền
 const PRICES = {
@@ -27,12 +28,28 @@ function calculateTotal() {
   const soThitBanhMi = parseInt(soThitBanhMiInput.value) || 1;
 
   let total = 0;
-  total += thit * PRICES.thit;
-  total += banhMiMat * PRICES.banhMiMat;
-  total += nemNuong * PRICES.nemNuong;
-  total += nuoc * PRICES.nuoc;
+  const subtotals = [];
 
-  total += banhMiThit * (PRICES.banhMiThitBase + ((soThitBanhMi - 1) * PRICES.thit));
+  const thitSubtotal = thit * PRICES.thit;
+  if (thit > 0) subtotals.push({ label: 'Thịt', value: thitSubtotal });
+
+  const banhMiMatSubtotal = banhMiMat * PRICES.banhMiMat;
+  if (banhMiMat > 0) subtotals.push({ label: 'Bánh mì mật', value: banhMiMatSubtotal });
+
+  const nemNuongSubtotal = nemNuong * PRICES.nemNuong;
+  if (nemNuong > 0) subtotals.push({ label: 'Nem nướng', value: nemNuongSubtotal });
+
+  const nuocSubtotal = nuoc * PRICES.nuoc;
+  if (nuoc > 0) subtotals.push({ label: 'Nước', value: nuocSubtotal });
+
+  const banhMiThitSubtotal = banhMiThit * (PRICES.banhMiThitBase + ((soThitBanhMi - 1) * PRICES.thit));
+  if (banhMiThit > 0) {
+    let label = 'Bánh mì kẹp thịt';
+    if (soThitBanhMi > 1) label += ` (${soThitBanhMi} thịt/ổ)`;
+    subtotals.push({ label, value: banhMiThitSubtotal });
+  }
+
+  total += thitSubtotal + banhMiMatSubtotal + nemNuongSubtotal + nuocSubtotal + banhMiThitSubtotal;
 
   // Hiện/ẩn phần "SỐ THỊT/Ổ" với hiệu ứng fade
   if (banhMiThit > 0) {
@@ -47,7 +64,12 @@ function calculateTotal() {
     }, 300);
   }
 
-  totalDisplay.textContent = `TỔNG: ${total.toLocaleString()} VND`;
+  // Hiển thị tổng từng mục
+  subtotalsDiv.innerHTML = subtotals.map(
+    s => `<div class="subtotal-row"><span class="subtotal-label">${s.label}</span><span class="subtotal-value">${s.value.toLocaleString()}đ</span></div>`
+  ).join('');
+
+  totalDisplay.textContent = `TỔNG TIỀN: ${total.toLocaleString()} VND`;
 }
 
 // Gắn sự kiện tự động tính khi nhập
@@ -70,9 +92,10 @@ function clearAll() {
   nuocInput.value = '';
   banhMiThitInput.value = '';
   soThitBanhMiInput.value = 1;
-  totalDisplay.textContent = 'TỔNG: 0 VND';
+  totalDisplay.textContent = 'TỔNG TIỀN: 0 VND';
   soThitBanhMiItem.classList.remove('show');
   setTimeout(() => {
     soThitBanhMiItem.style.display = 'none';
   }, 300);
+  subtotalsDiv.innerHTML = '';
 }
