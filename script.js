@@ -134,19 +134,27 @@ function clearAll() {
   totalContainer.style.display = 'none';
 }
 
-// Hiệu ứng ScrambleText cho footer
-window.addEventListener('DOMContentLoaded', function () {
-  setTimeout(function () {
-    if (window.gsap && window.ScrambleTextPlugin) {
-      gsap.from("#footer-text", {
-        duration: 2,
+// Hiệu ứng ScrambleText cho footer nâng cao
+document.addEventListener("DOMContentLoaded", function () {
+  if (window.gsap && window.ScrambleTextPlugin) {
+    gsap.registerPlugin(ScrambleTextPlugin);
+
+    // Ẩn text gốc
+    gsap.set("#scramble-text-original", { opacity: 0 });
+
+    // ScrambleText hiệu ứng khi load xong
+    const scrambleText = document.getElementById("scramble-text-original").textContent;
+    const tl = gsap.timeline({ id: "text-scramble", defaults: { ease: "none" } });
+
+    setTimeout(function () {
+      tl.to("#scramble-text-1", {
         scrambleText: {
-          text: "Trang web được tạo bởi TOVTK.DEV với sự trợ giúp của Github Copilot",
+          text: scrambleText,
           chars: "upperAndLowerCase",
           revealDelay: 0.5
         },
-        ease: "power2.out"
+        duration: 2
       });
-    }
-  }, 1000); // <-- chỉnh delay tại đây (ms)
+    }, 1000); // chỉnh delay tại đây (ms)
+  }
 });

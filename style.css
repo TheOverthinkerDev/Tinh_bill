@@ -135,15 +135,66 @@ button:hover {
 /* Footer nhỏ cuối trang */
 .footer {
   text-align: center;
-  font-size: 0.5rem; /* <-- chỉnh cỡ chữ nhỏ hơn tại đây */
+  font-size: 0.25rem; /* nhỏ hơn gấp đôi */
   color: #888;
   margin-top: 2.5rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
   letter-spacing: 0.5px;
   user-select: none;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  background: #fff;
+  padding-bottom: 0.2rem;
+  /* Nếu muốn footer nổi bật hơn trên nền trắng có thể thêm border-top */
+  /* border-top: 1px solid #eee; */
 }
+
 #footer-text {
   display: inline-block;
+}
+
+/* ScrambleText effect styles */
+@font-face {
+  font-display: block;
+  font-family: Mori;
+  font-style: normal;
+  font-weight: 600;
+  src: url(https://assets.codepen.io/16327/PPMori-Regular.woff) format("woff");
+}
+
+/* Đặt style cho hiệu ứng text scramble ở footer */
+.text-scramble__content {
+  font-size: max(0.7rem, min(2vw + 0.2rem, 0.8rem)); /* nhỏ hơn gấp đôi */
+  font-family: 'Google Sans', Arial, sans-serif;
+  font-weight: 200;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+  margin-top: 0;
+  padding-bottom: 0.2em;
+  position: relative;
+  text-align: center;
+  color: #888;
+}
+
+.text-scramble__text {
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.text-scramble__text span {
+  word-break: break-word;
+}
+
+.text-scramble__text img {
+  display: inline-block;
+  height: 0.9em;
+  width: auto;
 }
 
 @media (max-width: 600px) {
