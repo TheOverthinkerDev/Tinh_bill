@@ -46,7 +46,7 @@ function calculateTotal() {
   const banhMiThitSubtotal = banhMiThit * (PRICES.banhMiThitBase + ((soThitBanhMi - 1) * PRICES.thit));
   if (banhMiThit > 0) {
     let label = 'Bánh mì kẹp thịt';
-    if (soThitBanhMi > 1) label += ` (${soThitBanhMi} thịt/ổ)`;
+    if (soThitBanhMi > 1) label += ` (${soThitBanhMi} thịt/bánh)`;
     subtotals.push({ label, value: banhMiThitSubtotal });
   }
 
@@ -92,6 +92,29 @@ function calculateTotal() {
   soThitBanhMiInput
 ].forEach(input => {
   input.addEventListener('input', calculateTotal);
+});
+
+// Xử lý đặc biệt cho input "SỐ THỊT/Ổ"
+soThitBanhMiInput.addEventListener('focus', function () {
+  if (this.value === "1") {
+    this.value = "";
+  }
+});
+soThitBanhMiInput.addEventListener('blur', function () {
+  let val = parseInt(this.value, 10);
+  if (isNaN(val) || val < 1) val = 1;
+  if (val > 4) val = 4;
+  this.value = val;
+  calculateTotal();
+});
+soThitBanhMiInput.addEventListener('input', function () {
+  // Không cho nhập quá 1 ký tự (chỉ cho phép 1-4)
+  if (this.value.length > 1) {
+    this.value = this.value.slice(0, 1);
+  }
+  let val = parseInt(this.value, 10);
+  if (val > 4) this.value = "4";
+  if (val < 1 && this.value !== "") this.value = "1";
 });
 
 // Hàm xóa kết quả
