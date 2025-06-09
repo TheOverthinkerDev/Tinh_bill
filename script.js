@@ -133,3 +133,20 @@ function clearAll() {
   subtotalsDiv.innerHTML = '';
   totalContainer.style.display = 'none';
 }
+
+// Hiệu ứng ScrambleText cho footer
+window.addEventListener('DOMContentLoaded', function () {
+  setTimeout(function () {
+    if (window.gsap && window.ScrambleTextPlugin) {
+      gsap.from("#footer-text", {
+        duration: 2,
+        scrambleText: {
+          text: "Trang web được tạo bởi TOVTK.DEV với sự trợ giúp của Github Copilot",
+          chars: "upperAndLowerCase",
+          revealDelay: 0.5
+        },
+        ease: "power2.out"
+      });
+    }
+  }, 1000); // <-- chỉnh delay tại đây (ms)
+});

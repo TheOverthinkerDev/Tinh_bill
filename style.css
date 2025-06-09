@@ -132,6 +132,20 @@ button:hover {
   height: auto;
 }
 
+/* Footer nhỏ cuối trang */
+.footer {
+  text-align: center;
+  font-size: 0.5rem; /* <-- chỉnh cỡ chữ nhỏ hơn tại đây */
+  color: #888;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  letter-spacing: 0.5px;
+  user-select: none;
+}
+#footer-text {
+  display: inline-block;
+}
+
 @media (max-width: 600px) {
   .container {
     max-width: 98vw;
