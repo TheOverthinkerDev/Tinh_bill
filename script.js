@@ -95,6 +95,38 @@ function calculateTotal() {
   banhMiThitInput,
   soThitBanhMiInput
 ].forEach(input => {
+  // Chặn nhập ký tự không phải số và số âm
+  input.addEventListener('keydown', function (e) {
+    // Cho phép phím điều hướng, backspace, delete, tab, enter
+    if (
+      [8, 9, 13, 27, 46, 37, 38, 39, 40].includes(e.keyCode) ||
+      // Cho phép Ctrl/Cmd + A/C/V/X/Z
+      ((e.ctrlKey || e.metaKey) && ['a', 'c', 'v', 'x', 'z'].includes(e.key.toLowerCase()))
+    ) {
+      return;
+    }
+    // Chỉ cho phép số 0-9
+    if (!/^[0-9]$/.test(e.key)) {
+      e.preventDefault();
+    }
+  });
+
+  // Chặn nhập số âm và tự động chuyển về số dương
+  input.addEventListener('input', function () {
+    if (this.value && parseInt(this.value, 10) < 0) {
+      this.value = Math.abs(parseInt(this.value, 10));
+    }
+    // Loại bỏ ký tự không phải số nếu dán vào
+    if (/\D/.test(this.value)) {
+      this.value = this.value.replace(/\D/g, '');
+    }
+    // Giới hạn tối đa 80 cho các input trừ số thịt/bánh
+    if (this !== soThitBanhMiInput && this.value) {
+      let val = parseInt(this.value, 10);
+      if (val > 80) this.value = "80";
+    }
+  });
+
   input.addEventListener('input', calculateTotal);
 
   // Chặn nhập số âm cho tất cả input
