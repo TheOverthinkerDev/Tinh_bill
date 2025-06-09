@@ -8,6 +8,7 @@ const soThitBanhMiInput = document.getElementById('soThitBanhMi');
 const soThitBanhMiItem = document.getElementById('soThitBanhMiItem');
 const totalDisplay = document.getElementById('total');
 const subtotalsDiv = document.getElementById('subtotals');
+const totalContainer = document.getElementById('totalContainer');
 
 // Giá tiền
 const PRICES = {
@@ -70,6 +71,15 @@ function calculateTotal() {
   ).join('');
 
   totalDisplay.textContent = `TỔNG TIỀN: ${total.toLocaleString()} VND`;
+
+  const hasResult = thit > 0 || banhMiMat > 0 || nemNuong > 0 || nuoc > 0 || banhMiThit > 0;
+
+  // Hiển thị hoặc ẩn tổng tiền và gạch ngang
+  if (hasResult) {
+    totalContainer.style.display = '';
+  } else {
+    totalContainer.style.display = 'none';
+  }
 }
 
 // Gắn sự kiện tự động tính khi nhập
@@ -98,4 +108,5 @@ function clearAll() {
     soThitBanhMiItem.style.display = 'none';
   }, 300);
   subtotalsDiv.innerHTML = '';
+  totalContainer.style.display = 'none';
 }
