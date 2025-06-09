@@ -1,11 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 
 html {
   font-size: 120%; /* Tăng tỷ lệ toàn trang */
 }
 
 body {
-  font-family: 'Google Sans', Arial, sans-serif;
+  font-family: 'Inter', Arial, sans-serif; /* Sử dụng font Inter cho toàn bộ trang */
   background-color: #fff;
   color: #000;
   margin: 0;
@@ -58,8 +59,8 @@ h1 {
 .total {
   text-align: right;
   font-size: 2rem;
-  font-weight: bold;
-  margin: 1rem 0 0.5rem 0; /* <-- chỉnh khoảng cách dưới total tại đây */
+  font-weight: 800; /* font weight lớn nhất */
+  margin: 1rem 0 0.5rem 0;
   padding: 0.5rem;
 
 }
@@ -97,8 +98,8 @@ button:hover {
 
 #subtotals {
   margin-top: 0.05rem; /* <-- chỉnh khoảng cách trên subtotal tại đây */
-  margin-bottom: 1rem;
-  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.8rem; /* nhỏ hơn mặc định */
   color: #222;
   text-align: right;
   border-top: 2px solid #2ecc40; /* xanh lá */
@@ -109,8 +110,8 @@ button:hover {
   display: flex;
   justify-content: flex-end;
   gap: 1.2rem;
-  margin-bottom: 0.1rem;
-  font-size: 0.95rem;
+  margin-bottom: 0.3rem;
+  font-size: 0.8rem; /* nhỏ hơn mặc định */
   opacity: 0.85;
 
 }
@@ -171,8 +172,8 @@ button:hover {
 
 /* Đặt style cho hiệu ứng text scramble ở footer */
 .text-scramble__content {
-  font-size: max(0.7rem, min(2vw + 0.2rem, 0.8rem)); /* nhỏ hơn gấp đôi */
-  font-family: 'Google Sans', Arial, sans-serif;
+  font-size: max(0.7rem, min(2vw + 0.2rem, 0.8rem));
+  font-family: 'Inter', Arial, sans-serif; /* Sử dụng font Inter cho hiệu ứng scramble */
   font-weight: 200;
   letter-spacing: -0.01em;
   line-height: 1.1;
