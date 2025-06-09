@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TÔI TỰ TÍNH</title>
   <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
 </head>
 <body>
   <div class="container">
@@ -60,7 +61,10 @@
       <div id="subtotals"></div>
       <div class="total" id="total">TỔNG TIỀN: 0 VND</div>
     </div>
-    <button onclick="clearAll()">XÓA</button>
+    <div class="action-btns">
+      <button onclick="clearAll()">XÓA</button>
+      <button id="restoreBtn" class="restore-btn" title="Nhập lại dữ liệu vừa xoá"><i class="fa-solid fa-rotate-right"></i></button>
+    </div>
   </div>
 
   <footer class="footer">

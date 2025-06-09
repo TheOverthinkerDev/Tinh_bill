@@ -9,6 +9,7 @@ const soThitBanhMiItem = document.getElementById('soThitBanhMiItem');
 const totalDisplay = document.getElementById('total');
 const subtotalsDiv = document.getElementById('subtotals');
 const totalContainer = document.getElementById('totalContainer');
+const restoreBtn = document.getElementById('restoreBtn');
 
 // Giá tiền
 const PRICES = {
@@ -18,6 +19,9 @@ const PRICES = {
   nuoc: 10000,
   banhMiThitBase: 14000
 };
+
+// Biến lưu trữ dữ liệu vừa xóa
+let lastClearedData = null;
 
 // Hàm tính tổng
 function calculateTotal() {
@@ -126,6 +130,16 @@ soThitBanhMiInput.addEventListener('input', function () {
 
 // Hàm xóa kết quả
 function clearAll() {
+  // Lưu dữ liệu trước khi xoá
+  lastClearedData = {
+    thit: thitInput.value,
+    banhMiMat: banhMiMatInput.value,
+    nemNuong: nemNuongInput.value,
+    nuoc: nuocInput.value,
+    banhMiThit: banhMiThitInput.value,
+    soThitBanhMi: soThitBanhMiInput.value
+  };
+
   thitInput.value = '';
   banhMiMatInput.value = '';
   nemNuongInput.value = '';
@@ -139,6 +153,21 @@ function clearAll() {
   }, 300);
   subtotalsDiv.innerHTML = '';
   totalContainer.style.display = 'none';
+}
+
+// Khôi phục dữ liệu vừa xoá
+if (restoreBtn) {
+  restoreBtn.addEventListener('click', function () {
+    if (lastClearedData) {
+      thitInput.value = lastClearedData.thit || '';
+      banhMiMatInput.value = lastClearedData.banhMiMat || '';
+      nemNuongInput.value = lastClearedData.nemNuong || '';
+      nuocInput.value = lastClearedData.nuoc || '';
+      banhMiThitInput.value = lastClearedData.banhMiThit || '';
+      soThitBanhMiInput.value = lastClearedData.soThitBanhMi || 1;
+      calculateTotal();
+    }
+  });
 }
 
 // Hiệu ứng ScrambleText cho footer nâng cao
@@ -162,6 +191,6 @@ document.addEventListener("DOMContentLoaded", function () {
         },
         duration: 2
       });
-    }, 1000); // chỉnh delay tại đây (ms)
+    }, 2000); // chỉnh delay tại đây (ms)
   }
 });
