@@ -1,5 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;700&display=swap');
 
+html {
+  font-size: 120%; /* Tăng tỷ lệ toàn trang */
+}
+
 body {
   font-family: 'Google Sans', Arial, sans-serif;
   background-color: #fff;
@@ -128,7 +132,7 @@ button:hover {
 .logo-img {
   display: block;
   margin: 0 auto 1rem auto;      /* <-- chỉnh khoảng cách trên/dưới logo tại đây (giảm margin dưới, bỏ margin trên) */
-  max-width: 270px;              /* <-- chỉnh chiều rộng tối đa logo tại đây (tăng kích thước) */
+  max-width: 270px; /* Giữ nguyên logo */
   height: auto;
 }
 
