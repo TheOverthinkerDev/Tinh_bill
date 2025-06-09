@@ -92,6 +92,13 @@ function calculateTotal() {
   soThitBanhMiInput
 ].forEach(input => {
   input.addEventListener('input', calculateTotal);
+
+  // Chặn nhập số âm cho tất cả input
+  input.addEventListener('input', function () {
+    if (this.value && parseInt(this.value, 10) < 0) {
+      this.value = Math.abs(parseInt(this.value, 10));
+    }
+  });
 });
 
 // Xử lý đặc biệt cho input "SỐ THỊT/Ổ"
