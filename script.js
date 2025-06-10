@@ -86,53 +86,33 @@ function calculateTotal() {
   }
 }
 
-// Gắn sự kiện tự động tính khi nhập
-[
-  thitInput,
-  banhMiMatInput,
-  nemNuongInput,
-  nuocInput,
-  banhMiThitInput,
-  soThitBanhMiInput
-].forEach(input => {
-  // Chặn nhập ký tự không phải số và số âm
-  input.addEventListener('keydown', function (e) {
-    // Cho phép phím điều hướng, backspace, delete, tab, enter
-    if (
-      [8, 9, 13, 27, 46, 37, 38, 39, 40].includes(e.keyCode) ||
-      // Cho phép Ctrl/Cmd + A/C/V/X/Z
-      ((e.ctrlKey || e.metaKey) && ['a', 'c', 'v', 'x', 'z'].includes(e.key.toLowerCase()))
-    ) {
-      return;
-    }
-    // Chỉ cho phép số 0-9
-    if (!/^[0-9]$/.test(e.key)) {
-      e.preventDefault();
-    }
-  });
-
-  // Chặn nhập số âm và tự động chuyển về số dương
-  input.addEventListener('input', function () {
+// Gộp các event listener input
+[thitInput, banhMiMatInput, nemNuongInput, nuocInput, banhMiThitInput, soThitBanhMiInput].forEach(input => {
+  input.addEventListener('input', function(e) {
+    // Validate và clean input
     if (this.value && parseInt(this.value, 10) < 0) {
       this.value = Math.abs(parseInt(this.value, 10));
     }
-    // Loại bỏ ký tự không phải số nếu dán vào
     if (/\D/.test(this.value)) {
       this.value = this.value.replace(/\D/g, '');
     }
-    // Giới hạn tối đa 80 cho các input trừ số thịt/bánh
+    // Giới hạn max value
     if (this !== soThitBanhMiInput && this.value) {
       let val = parseInt(this.value, 10);
       if (val > 80) this.value = "80";
     }
+    // Tính toán
+    calculateTotal();
   });
 
-  input.addEventListener('input', calculateTotal);
-
-  // Chặn nhập số âm cho tất cả input
-  input.addEventListener('input', function () {
-    if (this.value && parseInt(this.value, 10) < 0) {
-      this.value = Math.abs(parseInt(this.value, 10));
+  // Chặn nhập ký tự không phải số
+  input.addEventListener('keydown', function(e) {
+    if ([8,9,13,27,46,37,38,39,40].includes(e.keyCode) || 
+        ((e.ctrlKey || e.metaKey) && ['a','c','v','x','z'].includes(e.key.toLowerCase()))) {
+      return;
+    }
+    if (!/^[0-9]$/.test(e.key)) {
+      e.preventDefault(); 
     }
   });
 });
@@ -183,6 +163,7 @@ function clearAll() {
   setTimeout(() => {
     soThitBanhMiItem.style.display = 'none';
   }, 300);
+  subtotalsDiv.classList.remove('show');
   subtotalsDiv.innerHTML = '';
   totalContainer.style.display = 'none';
 }
@@ -199,6 +180,13 @@ if (restoreBtn) {
       soThitBanhMiInput.value = lastClearedData.soThitBanhMi || 1;
       calculateTotal();
     }
+  });
+}
+
+// Thêm transition cho subtotals
+if (totalDisplay && subtotalsDiv) {
+  totalDisplay.addEventListener('click', function() {
+    subtotalsDiv.classList.toggle('show');
   });
 }
 
