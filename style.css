@@ -11,6 +11,7 @@ body {
   color: #000;
   margin: 0;
   padding: 0;
+  transition: background-color 0.3s, color 0.3s;
 }
 
 .container {
@@ -45,6 +46,7 @@ h1 {
   font-size: 0.9rem;
   font-weight: normal;
   margin-top: 0.2rem;
+  color: #666;
 }
 
 .item input {
@@ -54,6 +56,27 @@ h1 {
   border: 1px solid #ccc;
   border-radius: 6px;
   text-align: center;
+  transform-origin: center right;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background-color: #fff;
+  color: #000;
+}
+
+.item input:focus {
+  border-color: #2ecc40;
+  box-shadow: 0 0 0 2px rgba(46, 204, 64, 0.2);
+  transform: scale(1.02);
+}
+
+/* Spring animation cho input */
+@keyframes springIn {
+  0% { transform: scale(0.8); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.item input.modified {
+  animation: springIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
 .total {
@@ -64,6 +87,11 @@ h1 {
   padding: 0.3rem 0; /* giảm padding */
   position: relative;
   cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.total:hover {
+  transform: scale(1.02);
 }
 
 #totalContainer {
@@ -83,88 +111,37 @@ h1 {
   font-size: 0.8rem;
   color: #222;
   text-align: right;
-}
-
-#subtotals.show {
-  opacity: 1;
-  max-height: 500px; /* Đủ cao để hiển thị nội dung */
-  margin-top: 0.3rem; /* giảm margin trên */
-  margin-bottom: 0.3rem; /* giảm margin dưới */
-  padding-top: 0.3rem;
-  border-top: 2px solid #2ecc40;
-}
-
-/* Xóa các style cho .copy-btn */
-
-button {
-  display: block;
-  width: 100%;
-  padding: 1rem;
-  font-size: 1.5rem;
-  background-color: #111111;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-button:hover {
-  background-color: #333;
-}
-
-#soThitBanhMiItem {
-  opacity: 0;
-  max-height: 0;
-  overflow: hidden;
-  transition: opacity 0.3s ease, max-height 0.3s ease;
-  pointer-events: none;
-}
-
-#soThitBanhMiItem.show {
-  opacity: 1;
-  max-height: 100px;
-  pointer-events: auto;
-}
-
-/* Tối ưu transition cho subtotals */
-#subtotals {
-  opacity: 0;
-  visibility: hidden;
-  height: auto;
-  transition: opacity 0.3s ease, visibility 0.3s;
-  margin-top: 0.05rem;
-  margin-bottom: 0.5rem;
-  font-size: 0.8rem;
-  color: #222;
-  text-align: right;
-  border-top: 2px solid #2ecc40;
-  padding-top: 0.5rem;
+  transform-origin: top;
 }
 
 #subtotals.show {
   opacity: 1;
   visibility: visible;
+  max-height: 500px; /* Đủ cao để hiển thị nội dung */
+  margin-top: 0.3rem; /* giảm margin trên */
+  margin-bottom: 0.3rem; /* giảm margin dưới */
+  padding-top: 0.3rem;
+  border-top: 2px solid #2ecc40;
+  transform: translateY(0);
 }
 
-#subtotals {
-  margin-top: 0.05rem; /* <-- chỉnh khoảng cách trên subtotal tại đây */
-  margin-bottom: 0.5rem;
-  font-size: 0.8rem; /* nhỏ hơn mặc định */
-  color: #222;
-  text-align: right;
-  border-top: 2px solid #2ecc40; /* xanh lá */
-  padding-top: 0.5rem;
-}
-
-#subtotals .subtotal-row {
+.subtotal-row {
   display: flex;
   justify-content: flex-end;
   gap: 1.2rem;
   margin-bottom: 0.3rem;
   font-size: 0.8rem; /* nhỏ hơn mặc định */
   opacity: 0.85;
+  opacity: 0;
+  transform: translateX(20px);
+  animation: slideIn 0.3s forwards;
+}
 
+@keyframes slideIn {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 #subtotals .subtotal-label {
@@ -257,35 +234,60 @@ button:hover {
   display: flex;
   gap: 0.5rem;
   margin-bottom: 0.5rem;
+  align-items: center; /* Căn giữa các nút */
 }
 
 .action-btns button {
   flex: 1;
 }
 
+/* Nút action (Xóa) */
+.action-btns button:first-child {
+  flex: 1;
+  height: 50px;
+  background: linear-gradient(45deg, #ff3366, #ff6666);
+  border: none;
+  color: white;
+  font-weight: 700;
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-radius: 12px; /* Bo tròn đồng bộ */
+  box-shadow: 0 2px 8px rgba(255, 51, 102, 0.3);
+  transform: translateY(0);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.action-btns button:first-child:hover {
+  background: linear-gradient(45deg, #ff1a4d, #ff4d4d);
+  box-shadow: 0 4px 12px rgba(255, 51, 102, 0.4);
+  transform: translateY(-2px);
+}
+
+.action-btns button:first-child:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 4px rgba(255, 51, 102, 0.4);
+}
+
 .restore-btn {
-  width: 48px;
-  min-width: 48px;
-  max-width: 48px;
-  padding: 0;
-  font-size: 1.5rem;
-  background: #fff;
-  color: #888;
-  border: 2px solid #bbb;
-  border-radius: 8px;
-  cursor: pointer;
+  width: 42px !important;
+  min-width: 42px !important;
+  max-width: 42px !important;
+  height: 42px !important;
+  padding: 0 !important;
+  font-size: 1.1rem !important;
+  background: #fff !important;
+  color: #888 !important;
+  border: 2px solid #ddd !important;
+  border-radius: 12px !important; /* Cùng độ bo với nút xóa */
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.2s, color 0.2s, border 0.2s;
-}
-.restore-btn:hover {
-  background: #eee;
-  color: #222;
-  border-color: #888;
+  transition: all 0.2s ease !important;
+  flex: none !important;
 }
 
-/* Tối ưu mobile */
+/* Mobile optimization */
 @media (max-width: 600px) {
   html {
     font-size: 110%;
@@ -293,12 +295,6 @@ button:hover {
   
   .container {
     padding: 0.8rem;
-  }
-
-  h1 {
-    font-size: 2rem;
-    margin-bottom: 1rem;
-    font-weight: 900;
   }
 
   .item {
@@ -321,10 +317,260 @@ button:hover {
   .item input {
     font-size: 1rem;
     padding: 0.5rem;
+    width: 100%;
   }
 
   .total {
     font-size: 1.2rem;
-    padding: 0.3rem 0; /* Bỏ padding trái phải trên mobile */
+    padding: 0.3rem 0;
+  }
+
+  /* Điều chỉnh nút cho mobile */
+  .action-btns {
+    margin: 1rem 0 2rem 0;
+  }
+
+  .action-btns button:first-child {
+    height: 44px;
+    font-size: 1.1rem;
+    border-radius: 10px;
+    padding: 0.8rem;
+  }
+
+  .restore-btn {
+    width: 44px !important;
+    min-width: 44px !important;
+    max-width: 44px !important;
+    height: 44px !important;
+    font-size: 1.1rem !important;
+    border-radius: 10px !important;
+  }
+
+  /* Dark mode điều chỉnh cho mobile */
+  .theme-switch {
+    top: 0.8rem;
+    right: 0.8rem;
+  }
+
+  .theme-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 1rem;
+  }
+
+  .touch-container {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+  }
+
+  .item {
+    position: relative;
+    touch-action: pan-y pinch-zoom;
+  }
+
+  .item input:focus {
+    position: sticky;
+    top: 50vh;
+    transform: translateY(-50%);
+    z-index: 100;
+  }
+
+  /* Swipe indicator */
+  .swipeable::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 20px;
+    background: rgba(0,0,0,0.1);
+    border-radius: 2px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .swipeable.can-swipe::after {
+    opacity: 1;
+  }
+
+  /* Active state feedback */
+  .haptic:active {
+    transform: scale(0.98);
+  }
+}
+
+/* Dark mode variables */
+:root {
+  --bg-color: #fff;
+  --text-color: #000;
+  --border-color: #ccc;
+  --btn-bg: #111111;
+  --btn-text: #fff;
+  --input-bg: #fff;
+  --input-text: #000;
+  --price-color: #666;
+  --subtotal-border: #2ecc40;
+  --subtotal-text: #222;
+}
+
+[data-theme="dark"] {
+  --bg-color: #1a1a1a;
+  --text-color: #fff;
+  --border-color: #404040;
+  --btn-bg: #333;
+  --btn-text: #fff;
+  --input-bg: #2a2a2a;
+  --input-text: #fff;
+  --price-color: #aaa;
+  --subtotal-border: #2ecc40;
+  --subtotal-text: #ddd;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+.price {
+  color: var(--price-color);
+}
+
+.item input {
+  background-color: var(--input-bg);
+  color: var(--input-text);
+  border-color: var(--border-color);
+}
+
+#subtotals {
+  color: var(--subtotal-text);
+  border-top-color: var(--subtotal-border);
+}
+
+.restore-btn {
+  background: var(--input-bg) !important;
+  color: var(--price-color) !important;
+  border-color: var(--border-color) !important;
+}
+
+/* Dark mode điều chỉnh cho loading effect */
+[data-theme="dark"] .loading::after {
+  background-image: linear-gradient(
+    90deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,0.1) 50%,
+    rgba(255,255,255,0) 100%
+  );
+}
+
+[data-theme="dark"] .theme-btn {
+  background: var(--input-bg);
+  border: 1px solid var(--border-color);
+}
+
+/* Animation keyframes */
+@keyframes shimmer {
+  0% { background-position: -1000px 0; }
+  100% { background-position: 1000px 0; }
+}
+
+@keyframes scaleButton {
+  0% { transform: scale(1); }
+  50% { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+
+/* Loading shimmer effect */
+.shimmer {
+  background: linear-gradient(90deg, 
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,0.2) 50%,
+    rgba(255,255,255,0) 100%);
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite linear;
+}
+
+/* Loading state */
+.loading {
+  position: relative;
+  overflow: hidden;
+}
+
+.loading::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: inherit;
+  background-image: linear-gradient(
+    90deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,0.2) 50%,
+    rgba(255,255,255,0) 100%
+  );
+  animation: shimmer 2s infinite;
+}
+
+/* Theme switcher */
+.theme-switch {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 100;
+}
+
+.theme-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  padding: 0;
+  font-size: 1.1rem;
+  background: var(--bg-color);
+  color: var(--text-color);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid var(--border-color);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(8px);
+}
+
+.theme-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.theme-btn:active {
+  transform: scale(0.95);
+}
+
+[data-theme="dark"] .theme-btn {
+  background: var(--input-bg);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .theme-btn:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+/* Thêm animation cho icon */
+.theme-btn i {
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.theme-btn:hover i {
+  transform: rotate(360deg);
+}
+
+/* Mobile adjustment */
+@media (max-width: 600px) {
+  .theme-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
   }
 }

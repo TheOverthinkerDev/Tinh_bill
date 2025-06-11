@@ -9,9 +9,16 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+  <meta name="theme-color" content="#ffffff" id="theme-color">
+  <script defer src="https://cdn.jsdelivr.net/npm/@szmarczak/interact.js@1.4.11/dist/interact.min.js"></script>
 </head>
 <body>
-  <div class="container">
+  <div class="container touch-container">
+    <div class="theme-switch">
+      <button id="themeSwitcher" class="theme-btn">
+        <i class="fas fa-moon"></i>
+      </button>
+    </div>
     <img src="assets/logo.svg" alt="TÔI TỰ TÍNH" class="logo-img">
 
     <div class="item">
@@ -65,8 +72,10 @@
       <div id="subtotals"></div>
     </div>
     <div class="action-btns">
-      <button onclick="clearAll()">XÓA</button>
-      <button id="restoreBtn" class="restore-btn" title="Nhập lại dữ liệu vừa xoá"><i class="fa-solid fa-rotate-right"></i></button>
+      <button onclick="clearAll()" class="haptic">XÓA</button>
+      <button id="restoreBtn" class="restore-btn haptic" title="Nhập lại dữ liệu vừa xoá">
+        <i class="fa-solid fa-rotate-right"></i>
+      </button>
     </div>
   </div>
 
