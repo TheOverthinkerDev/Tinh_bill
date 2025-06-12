@@ -10,6 +10,8 @@ const totalDisplay = document.getElementById('total');
 const subtotalsDiv = document.getElementById('subtotals');
 const totalContainer = document.getElementById('totalContainer');
 const restoreBtn = document.getElementById('restoreBtn');
+const customerPayInput = document.getElementById('customerPay');
+const changeDisplay = document.getElementById('change');
 
 // Giá tiền
 const PRICES = {
@@ -22,6 +24,9 @@ const PRICES = {
 
 // Biến lưu trữ dữ liệu vừa xóa
 let lastClearedData = null;
+
+// Thêm biến toàn cục để theo dõi trạng thái
+let isDetailsVisible = false;
 
 // Add loading state animation thay vì 21000
 function setLoading(element, isLoading) {
@@ -110,7 +115,17 @@ async function calculateTotal(skipAnimation = false) {
   }
 
   // Show/hide total container
-  totalContainer.style.display = total > 0 ? '' : 'none';
+  if (total > 0) {
+    totalContainer.style.display = '';
+    
+    // Reset trạng thái ẩn khi có dữ liệu mới
+    isDetailsVisible = false;
+    const calculator = document.querySelector('.change-calculator');
+    calculator.classList.remove('show');
+    subtotalsDiv.classList.remove('show');
+  } else {
+    totalContainer.style.display = 'none';
+  }
 }
 
 // Gộp các event listener input
@@ -191,6 +206,12 @@ function clearAll() {
   subtotalsDiv.classList.remove('show');
   subtotalsDiv.innerHTML = '';
   totalContainer.style.display = 'none';
+  customerPayInput.value = '';
+  changeDisplay.textContent = '';
+  changeDisplay.classList.remove('positive', 'negative');
+  const calculator = document.querySelector('.change-calculator');
+  calculator.classList.remove('show'); // Ẩn phần khách trả khi xóa
+  isDetailsVisible = false;
 }
 
 // Khôi phục dữ liệu vừa xoá
@@ -210,8 +231,19 @@ if (restoreBtn) {
 
 // Thêm transition cho subtotals
 if (totalDisplay && subtotalsDiv) {
+  let isCalculatorVisible = false; // Thêm biến theo dõi trạng thái
+  
   totalDisplay.addEventListener('click', function() {
-    subtotalsDiv.classList.toggle('show');
+    isCalculatorVisible = !isCalculatorVisible;
+    const calculator = document.querySelector('.change-calculator');
+    
+    if (isCalculatorVisible) {
+      subtotalsDiv.classList.add('show');
+      calculator.classList.add('show');
+    } else {
+      subtotalsDiv.classList.remove('show');
+      calculator.classList.remove('show');
+    }
   });
 }
 
@@ -263,7 +295,8 @@ function saveState() {
       banhMiThit: banhMiThitInput.value,
       soThitBanhMi: soThitBanhMiInput.value
     },
-    lastCleared: lastClearedData
+    lastCleared: lastClearedData,
+    customerPay: customerPayInput.value
   };
   localStorage.setItem(APP_STATE_KEY, JSON.stringify(state));
 }
@@ -282,6 +315,10 @@ function loadState() {
           if (input) input.value = value;
         });
         lastClearedData = state.lastCleared;
+        if (state.customerPay) {
+          customerPayInput.value = state.customerPay;
+          calculateChange();
+        }
         calculateTotal();
       } else {
         // Xóa state nếu không có dữ liệu
@@ -443,7 +480,17 @@ async function calculateTotal(skipAnimation = false) {
   }
 
   // Show/hide total container
-  totalContainer.style.display = total > 0 ? '' : 'none';
+  if (total > 0) {
+    totalContainer.style.display = '';
+    
+    // Reset trạng thái ẩn khi có dữ liệu mới
+    isDetailsVisible = false;
+    const calculator = document.querySelector('.change-calculator');
+    calculator.classList.remove('show');
+    subtotalsDiv.classList.remove('show');
+  } else {
+    totalContainer.style.display = 'none';
+  }
 }
 
 // Fix event listener cho share button không tồn tại
@@ -458,4 +505,92 @@ if (shareBtn) {
       });
     }
   });
+}
+
+// Sửa lại event listener cho input khách trả
+customerPayInput.addEventListener('input', function(e) {
+  // Xóa các ký tự không phải số
+  let value = this.value.replace(/[^\d]/g, '');
+  
+  if (value) {
+    // Format giá trị với dấu phân cách
+    this.value = parseInt(value).toLocaleString('vi-VN');
+    
+    // Tạo gợi ý số tiền dựa vào độ dài số
+    if (value.length <= 3) {
+      const num = parseInt(value);
+      let suggestions = [];
+      
+      if (value.length === 1) {
+        // Số đơn vị: gợi ý nghìn, chục nghìn, trăm nghìn
+        suggestions = [
+          num * 1000,
+          num * 10000,
+          num * 100000
+        ];
+      } else if (value.length === 2) {
+        // Số hàng chục: gợi ý chục nghìn, trăm nghìn
+        suggestions = [
+          num * 1000,
+          num * 10000
+        ];
+      } else if (value.length === 3) {
+        // Số hàng trăm: gợi ý trăm nghìn
+        suggestions = [
+          num * 1000
+        ];
+      }
+      
+      // Hiển thị các gợi ý
+      const suggestionsHtml = suggestions
+        .map(s => `<button class="suggestion-btn" onclick="applySuggestion(${s})">${s.toLocaleString('vi-VN')}đ</button>`)
+        .join('');
+      
+      document.getElementById('amountSuggestions').innerHTML = suggestionsHtml;
+    } else {
+      document.getElementById('amountSuggestions').innerHTML = '';
+    }
+    
+    calculateChange();
+  } else {
+    this.value = '';
+    changeDisplay.textContent = '';
+    document.getElementById('amountSuggestions').innerHTML = '';
+  }
+});
+
+// Hàm áp dụng số tiền được gợi ý
+function applySuggestion(amount) {
+  customerPayInput.value = amount.toLocaleString('vi-VN');
+  calculateChange();
+  document.getElementById('amountSuggestions').innerHTML = '';
+}
+
+// Sửa lại hàm tính tiền thừa
+function calculateChange() {
+  // Lấy số tiền tổng (bỏ dấu phân cách)
+  const totalAmount = parseInt(totalDisplay.textContent.replace(/[^\d]/g, '')) || 0;
+  
+  // Lấy số tiền khách trả (bỏ dấu phân cách)
+  const customerAmount = parseInt(customerPayInput.value.replace(/[^\d]/g, '')) || 0;
+  
+  // Tính tiền thừa
+  const change = customerAmount - totalAmount;
+
+  // Hiển thị kết quả
+  if (change > 0) {
+    changeDisplay.textContent = `Tiền thừa: ${change.toLocaleString('vi-VN')}đ`;
+    changeDisplay.classList.add('positive');
+    changeDisplay.classList.remove('negative');
+  } else if (change < 0) {
+    changeDisplay.textContent = `Thiếu: ${Math.abs(change).toLocaleString('vi-VN')}đ`;
+    changeDisplay.classList.add('negative');
+    changeDisplay.classList.remove('positive');
+  } else if (change === 0 && customerAmount > 0) {
+    changeDisplay.textContent = 'Trả đủ';
+    changeDisplay.classList.remove('positive', 'negative');
+  } else {
+    changeDisplay.textContent = '';
+    changeDisplay.classList.remove('positive', 'negative');
+  }
 }
