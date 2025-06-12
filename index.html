@@ -10,6 +10,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
   <meta name="theme-color" content="#ffffff" id="theme-color">
+  <meta name="description" content="Tính tiền cho quán bánh mì">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="format-detection" content="telephone=no">
   <script defer src="https://cdn.jsdelivr.net/npm/@szmarczak/interact.js@1.4.11/dist/interact.min.js"></script>
 </head>
 <body>
@@ -26,7 +29,10 @@
         THỊT
         <span class="price">(11.000đ)</span>
       </div>
-      <input type="number" id="thit" />
+      <div class="input-touch-target">
+        <!-- Thêm aria-label cho các input -->
+        <input type="number" id="thit" aria-label="Số lượng thịt" />
+      </div>
     </div>
 
     <div class="item">
@@ -34,7 +40,9 @@
         BÁNH MÌ MẬT
         <span class="price">(6.000đ)</span>
       </div>
-      <input type="number" id="banhMiMat" />
+      <div class="input-touch-target">
+        <input type="number" id="banhMiMat" />
+      </div>
     </div>
 
     <div class="item">
@@ -42,7 +50,9 @@
         NEM NƯỚNG
         <span class="price">(7.000đ)</span>
       </div>
-      <input type="number" id="nemNuong" />
+      <div class="input-touch-target">
+        <input type="number" id="nemNuong" />
+      </div>
     </div>
 
     <div class="item">
@@ -50,7 +60,9 @@
         NƯỚC
         <span class="price">(10.000đ)</span>
       </div>
-      <input type="number" id="nuoc" />
+      <div class="input-touch-target">
+        <input type="number" id="nuoc" />
+      </div>
     </div>
 
     <div class="item">
@@ -58,7 +70,9 @@
         BÁNH MÌ KẸP THỊT
         <span class="price">(3000đ bánh + thịt)</span>
       </div>
-      <input type="number" id="banhMiThit" />
+      <div class="input-touch-target">
+        <input type="number" id="banhMiThit" />
+      </div>
     </div>
 
     <div class="item" id="soThitBanhMiItem" style="display: none;">

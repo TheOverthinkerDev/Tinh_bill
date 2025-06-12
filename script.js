@@ -231,19 +231,12 @@ if (restoreBtn) {
 
 // Thêm transition cho subtotals
 if (totalDisplay && subtotalsDiv) {
-  let isCalculatorVisible = false; // Thêm biến theo dõi trạng thái
-  
   totalDisplay.addEventListener('click', function() {
-    isCalculatorVisible = !isCalculatorVisible;
+    isDetailsVisible = !isDetailsVisible;
     const calculator = document.querySelector('.change-calculator');
     
-    if (isCalculatorVisible) {
-      subtotalsDiv.classList.add('show');
-      calculator.classList.add('show');
-    } else {
-      subtotalsDiv.classList.remove('show');
-      calculator.classList.remove('show');
-    }
+    subtotalsDiv.classList.toggle('show');
+    calculator.classList.toggle('show');
   });
 }
 

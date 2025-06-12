@@ -34,6 +34,7 @@ h1 {
   justify-content: space-between;
   align-items: center;
   gap: 1rem; /* Khoảng cách giữa label và input */
+  touch-action: manipulation; /* Ngăn double-tap zoom */
 }
 
 .label {
@@ -58,6 +59,11 @@ h1 {
   text-align: center;
   background-color: var(--input-bg);
   color: var(--input-text);
+  pointer-events: auto; /* Cho phép tương tác mặc định trên desktop */
+  touch-action: auto; /* Cho phép touch action mặc định */
+  -webkit-user-select: text; /* Fix lỗi không thể select text trên iOS */
+  user-select: text;
+  -webkit-tap-highlight-color: transparent; /* Bỏ highlight khi tap trên mobile */
 }
 
 .item input:focus {
@@ -328,6 +334,9 @@ h1 {
     width: 100%;
     min-width: 0;
     box-sizing: border-box;
+    -webkit-appearance: none; /* Fix lỗi input styling trên iOS */
+    appearance: none;
+    cursor: text;
   }
 
   .total {
@@ -659,4 +668,47 @@ body {
     font-size: 0.75rem;
     height: 24px;
   }
+}
+
+/* Cải thiện touch target cho mobile */
+.item .input-touch-target {
+  position: relative;
+  width: 100%;
+  flex: 1;
+}
+
+.item .input-touch-target::before {
+  content: none; /* Ẩn touch target trên desktop */
+}
+
+/* Mobile specific styles */
+@media (max-width: 600px) {
+  .item input {
+    pointer-events: none; /* Vô hiệu hóa pointer events trên mobile */
+    touch-action: none; /* Vô hiệu hóa touch actions trên mobile */
+  }
+
+  .item .input-touch-target::before {
+    content: ''; /* Hiện touch target trên mobile */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    transform: translate(-50%, -50%);
+    pointer-events: auto;
+    cursor: text;
+    z-index: 1; /* Đảm bảo vùng touch luôn ở trên cùng */
+  }
+  
+  .item .input-touch-target:focus-within::before {
+    display: none; /* Ẩn vùng touch khi đang focus */
+  }
+}
+
+/* Tối ưu animation */
+.change-calculator,
+#subtotals {
+  transition: all 0.2s ease-out;
+  will-change: opacity, transform;
 }
