@@ -1,15 +1,57 @@
 {
-  "name": "Tôi Tự Tính",
+  "name": "Tôi Tự Tính - Ứng dụng tính tiền quán ăn",
   "short_name": "Tự Tính",
+  "description": "Ứng dụng tính tiền đơn giản và nhanh chóng cho quán ăn",
   "start_url": "/",
   "display": "standalone",
-  "theme_color": "#ffffff",
+  "theme_color": "#2ecc40",
   "background_color": "#ffffff",
+  "orientation": "portrait",
+  "scope": "/",
+  "lang": "vi",
+  "dir": "ltr",
+  "categories": ["business", "finance", "food"],
   "icons": [
+    {
+      "src": "assets/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
     {
       "src": "assets/icon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Tính tiền nhanh",
+      "short_name": "Tính tiền",
+      "description": "Mở ứng dụng tính tiền",
+      "url": "/",
+      "icons": [{ "src": "assets/logo.svg", "sizes": "96x96" }]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "assets/screenshot-wide.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide"
+    },
+    {
+      "src": "assets/screenshot-narrow.png", 
+      "sizes": "640x1136",
+      "type": "image/png",
+      "form_factor": "narrow"
     }
   ]
 }

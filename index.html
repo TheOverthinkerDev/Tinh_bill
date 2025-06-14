@@ -3,8 +3,50 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Ứng dụng tính tiền đơn giản và nhanh chóng cho quán ăn" />
-  <meta name="theme-color" content="#ffffff" id="theme-color">
+  <meta name="description" content="Ứng dụng tính tiền đơn giản và nhanh chóng cho quán ăn. Hỗ trợ tính tiền thối, lưu trữ offline, và in hóa đơn." />
+  <meta name="keywords" content="tính tiền, quán ăn, hóa đơn, bánh mì, thịt nướng, PWA" />
+  <meta name="author" content="TOVTK.DEV" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#2ecc40" id="theme-color">
+  
+  <!-- Open Graph Meta Tags -->
+  <meta property="og:title" content="TÔI TỰ TÍNH - Ứng dụng tính tiền quán ăn" />
+  <meta property="og:description" content="Ứng dụng tính tiền đơn giản và nhanh chóng cho quán ăn. Hỗ trợ PWA, offline, và nhiều tính năng tiện ích." />
+  <meta property="og:image" content="https://yoursite.github.io/Tinh_bill/assets/og-image.png" />
+  <meta property="og:url" content="https://yoursite.github.io/Tinh_bill/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="vi_VN" />
+  
+  <!-- Twitter Card Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="TÔI TỰ TÍNH - Ứng dụng tính tiền quán ăn" />
+  <meta name="twitter:description" content="Ứng dụng tính tiền đơn giản cho quán ăn với PWA support" />
+  <meta name="twitter:image" content="https://yoursite.github.io/Tinh_bill/assets/twitter-card.png" />
+  
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://yoursite.github.io/Tinh_bill/" />
+  
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Tôi Tự Tính",
+    "description": "Ứng dụng tính tiền đơn giản và nhanh chóng cho quán ăn",
+    "url": "https://yoursite.github.io/Tinh_bill/",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "VND"
+    },
+    "author": {
+      "@type": "Person",
+      "name": "TOVTK.DEV"
+    }
+  }
+  </script>
   <title>TÔI TỰ TÍNH</title>
   
   <!-- Preload critical assets -->
@@ -98,6 +140,24 @@
         <i class="fa-solid fa-rotate-right" aria-hidden="true"></i>
       </button>
     </div>
+    
+    <div class="secondary-actions">
+      <button onclick="undo()" class="action-btn secondary" title="Hoàn tác (Ctrl+Z)" aria-label="Hoàn tác">
+        <i class="fa-solid fa-undo" aria-hidden="true"></i>
+      </button>
+      <button onclick="redo()" class="action-btn secondary" title="Làm lại (Ctrl+Y)" aria-label="Làm lại">
+        <i class="fa-solid fa-redo" aria-hidden="true"></i>
+      </button>
+      <button onclick="exportData()" class="action-btn secondary" title="Xuất hóa đơn" aria-label="Xuất hóa đơn">
+        <i class="fa-solid fa-download" aria-hidden="true"></i>
+      </button>
+      <button onclick="printReceipt()" class="action-btn secondary" title="In hóa đơn" aria-label="In hóa đơn">
+        <i class="fa-solid fa-print" aria-hidden="true"></i>
+      </button>
+      <button onclick="createFeedbackForm()" class="action-btn secondary" title="Góp ý cải tiến" aria-label="Góp ý">
+        <i class="fa-solid fa-comment" aria-hidden="true"></i>
+      </button>
+    </div>
   </div>
 
   <footer class="footer">
@@ -112,5 +172,20 @@
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrambleTextPlugin.min.js" defer></script>
   <script src="script.js" defer></script>
+  
+  <!-- Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then(registration => {
+            console.log('SW registered: ', registration);
+          })
+          .catch(registrationError => {
+            console.log('SW registration failed: ', registrationError);
+          });
+      });
+    }
+  </script>
 </body>
 </html>

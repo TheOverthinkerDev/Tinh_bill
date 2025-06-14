@@ -29,6 +29,11 @@ let lastClearedData = null;
 let isDetailsVisible = false;
 const APP_STATE_KEY = 'toitutinhState';
 
+// History management for undo/redo functionality
+let history = [];
+let historyIndex = -1;
+const MAX_HISTORY = 20;
+
 // Initialize app
 document.addEventListener('DOMContentLoaded', function() {
   loadSavedTheme();
@@ -85,6 +90,17 @@ function initEventListeners() {
 
   // Auto-save
   window.addEventListener('beforeunload', saveState);
+
+  // Keyboard shortcuts for undo/redo
+  document.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'z' && !e.shiftKey) {
+      e.preventDefault();
+      undo();
+    } else if ((e.ctrlKey || e.metaKey) && (e.key === 'y' || (e.key === 'z' && e.shiftKey))) {
+      e.preventDefault();
+      redo();
+    }
+  });
 }
 
 function toggleTheme() {
@@ -101,6 +117,7 @@ function handleInputChange(e) {
   validateInput(e.target);
   calculateTotal();
   saveState();
+  saveToHistory(); // Save to history on input change
 }
 
 function validateNumberInput(e) {
@@ -350,49 +367,130 @@ function restoreLastCleared() {
   }
 }
 
-// State persistence
-function saveState() {
-  const state = {
-    inputs: {
-      thit: thitInput.value,
-      banhMiMat: banhMiMatInput.value,
-      nemNuong: nemNuongInput.value,
-      nuoc: nuocInput.value,
-      banhMiThit: banhMiThitInput.value,
-      soThitBanhMi: soThitBanhMiInput.value,
-      customerPay: customerPayInput.value
-    },
-    lastCleared: lastClearedData
-  };
-  localStorage.setItem(APP_STATE_KEY, JSON.stringify(state));
+// Notification system
+function showNotification(message, type = 'info', duration = 3000) {
+  const notification = document.createElement('div');
+  notification.className = `notification notification-${type}`;
+  notification.innerHTML = `
+    <span class="notification-message">${message}</span>
+    <button class="notification-close" onclick="this.parentElement.remove()">×</button>
+  `;
+  
+  document.body.appendChild(notification);
+  
+  // Trigger animation
+  setTimeout(() => notification.classList.add('show'), 10);
+  
+  // Auto remove
+  setTimeout(() => {
+    notification.classList.remove('show');
+    setTimeout(() => notification.remove(), 300);
+  }, duration);
 }
 
-function loadState() {
-  const savedState = localStorage.getItem(APP_STATE_KEY);
-  if (savedState) {
-    try {
-      const state = JSON.parse(savedState);
-      const hasData = Object.values(state.inputs).some(value => value && value !== '1');
-      
-      if (hasData) {
-        Object.entries(state.inputs).forEach(([key, value]) => {
-          const input = document.getElementById(key);
-          if (input && value) input.value = value;
-        });
-        lastClearedData = state.lastCleared;
-        calculateTotal();
-        // Ensure customer payment section starts hidden even after loading state
-        const calculator = document.querySelector('.change-calculator');
-        if (calculator) {
-          calculator.classList.remove('show');
-        }
-        isDetailsVisible = false;
+// Export functionality
+function exportData() {
+  const data = {
+    date: new Date().toLocaleDateString('vi-VN'),
+    time: new Date().toLocaleTimeString('vi-VN',
+    items: [],
+    total: 0
+  };
+  
+  const inputs = [
+    { id: 'thit', name: 'Thịt', price: PRICES.thit },
+    { id: 'banhMiMat', name: 'Bánh mì mật', price: PRICES.banhMiMat },
+    { id: 'nemNuong', name: 'Nem nướng', price: PRICES.nemNuong },
+    { id: 'nuoc', name: 'Nước', price: PRICES.nuoc },
+    { id: 'banhMiThit', name: 'Bánh mì kẹp thịt', price: PRICES.banhMiThitBase }
+  ];
+  
+  inputs.forEach(item => {
+    const quantity = parseInt(document.getElementById(item.id).value) || 0;
+    if (quantity > 0) {
+      let itemPrice = item.price;
+      if (item.id === 'banhMiThit') {
+        const soThit = parseInt(soThitBanhMiInput.value) || 1;
+        itemPrice = PRICES.banhMiThitBase + ((soThit - 1) * PRICES.thit);
       }
-    } catch (e) {
-      console.error('Error loading state:', e);
-      localStorage.removeItem(APP_STATE_KEY);
+      data.items.push({
+        name: item.name,
+        quantity,
+        price: itemPrice,
+        subtotal: quantity * itemPrice
+      });
+      data.total += quantity * itemPrice;
     }
+  });
+  
+  if (customerPayInput.value) {
+    data.customerPaid = parseInt(customerPayInput.value.replace(/[^\d]/g, '')) || 0;
+    data.change = data.customerPaid - data.total;
   }
+  
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `hoa-don-${Date.now()}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  
+  showNotification('📄 Đã xuất hóa đơn', 'success');
+}
+
+// Print functionality
+function printReceipt() {
+  const printWindow = window.open('', '_blank');
+  const total = parseInt(totalDisplay.textContent.replace(/[^\d]/g, '')) || 0;
+  
+  printWindow.document.write(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>Hóa đơn - ${new Date().toLocaleDateString('vi-VN')}</title>
+      <style>
+        body { font-family: 'Courier New', monospace; padding: 20px; max-width: 300px; }
+        .header { text-align: center; border-bottom: 1px solid #000; padding-bottom: 10px; }
+        .item { display: flex; justify-content: space-between; margin: 5px 0; }
+        .total { border-top: 1px solid #000; padding-top: 10px; font-weight: bold; }
+        .date { text-align: center; margin-top: 10px; font-size: 12px; }
+      </style>
+    </head>
+    <body>
+      <div class="header">
+        <h2>TÔI TỰ TÍNH</h2>
+        <p>Hóa đơn tính tiền</p>
+      </div>
+      <div class="items">
+        ${subtotalsDiv.innerHTML}
+      </div>
+      <div class="total">
+        <div class="item">
+          <span>TỔNG TIỀN:</span>
+          <span>${total.toLocaleString()}đ</span>
+        </div>
+        ${customerPayInput.value ? `
+          <div class="item">
+            <span>Khách trả:</span>
+            <span>${parseInt(customerPayInput.value.replace(/[^\d]/g, '') || 0).toLocaleString()}đ</span>
+          </div>
+          <div class="item">
+            <span>Tiền thừa:</span>
+            <span>${(parseInt(customerPayInput.value.replace(/[^\d]/g, '') || 0) - total).toLocaleString()}đ</span>
+          </div>
+        ` : ''}
+      </div>
+      <div class="date">
+        ${new Date().toLocaleString('vi-VN')}
+      </div>
+    </body>
+    </html>
+  `);
+  
+  printWindow.document.close();
+  printWindow.print();
+  showNotification('🖨️ Đang in hóa đơn', 'info');
 }
 
 // GSAP Scramble Text Effect
@@ -423,7 +521,252 @@ function initializeCustomerPaymentVisibility() {
   }
 }
 
+// Performance monitoring
+const performanceObserver = new PerformanceObserver((list) => {
+  for (const entry of list.getEntries()) {
+    if (entry.entryType === 'measure') {
+      console.log(`${entry.name}: ${entry.duration}ms`);
+    }
+  }
+});
+
+if ('PerformanceObserver' in window) {
+  performanceObserver.observe({ entryTypes: ['measure'] });
+}
+
+// Usage analytics (privacy-friendly)
+const analytics = {
+  sessions: parseInt(localStorage.getItem('sessions') || '0'),
+  calculations: parseInt(localStorage.getItem('calculations') || '0'),
+  features: JSON.parse(localStorage.getItem('features') || '{}')
+};
+
+function trackUsage(feature) {
+  analytics.features[feature] = (analytics.features[feature] || 0) + 1;
+  localStorage.setItem('features', JSON.stringify(analytics.features));
+}
+
+function trackCalculation() {
+  analytics.calculations++;
+  localStorage.setItem('calculations', analytics.calculations.toString());
+  trackUsage('calculation');
+}
+
+// Track session
+analytics.sessions++;
+localStorage.setItem('sessions', analytics.sessions.toString());
+
+// Update calculateTotal to include tracking
+const originalCalculateTotal = calculateTotal;
+calculateTotal = function() {
+  performance.mark('calc-start');
+  const result = originalCalculateTotal.apply(this, arguments);
+  performance.mark('calc-end');
+  performance.measure('calculation', 'calc-start', 'calc-end');
+  trackCalculation();
+  return result;
+};
+
+// Connection status
+function updateConnectionStatus() {
+  const status = navigator.onLine ? 'online' : 'offline';
+  document.body.setAttribute('data-connection', status);
+  
+  if (!navigator.onLine) {
+    showNotification('📱 Chế độ offline - Dữ liệu được lưu cục bộ', 'info', 5000);
+  }
+}
+
+window.addEventListener('online', updateConnectionStatus);
+window.addEventListener('offline', updateConnectionStatus);
+updateConnectionStatus();
+
 // Clean up on page unload
 window.addEventListener('unload', () => {
   localStorage.removeItem(APP_STATE_KEY);
 });
+
+// History management functions
+function saveToHistory() {
+  const currentState = {
+    inputs: {
+      thit: thitInput.value,
+      banhMiMat: banhMiMatInput.value,
+      nemNuong: nemNuongInput.value,
+      nuoc: nuocInput.value,
+      banhMiThit: banhMiThitInput.value,
+      soThitBanhMi: soThitBanhMiInput.value,
+      customerPay: customerPayInput.value
+    },
+    timestamp: Date.now()
+  };
+  
+  // Remove future history if we're not at the end
+  if (historyIndex < history.length - 1) {
+    history = history.slice(0, historyIndex + 1);
+  }
+  
+  // Add new state
+  history.push(currentState);
+  
+  // Limit history size
+  if (history.length > MAX_HISTORY) {
+    history.shift();
+  } else {
+    historyIndex++;
+  }
+}
+
+function undo() {
+  if (historyIndex > 0) {
+    historyIndex--;
+    const state = history[historyIndex];
+    restoreHistoryState(state);
+    showNotification('↶ Hoàn tác', 'success');
+  } else {
+    showNotification('Không có gì để hoàn tác', 'info');
+  }
+}
+
+function redo() {
+  if (historyIndex < history.length - 1) {
+    historyIndex++;
+    const state = history[historyIndex];
+    restoreHistoryState(state);
+    showNotification('↷ Làm lại', 'success');
+  } else {
+    showNotification('Không có gì để làm lại', 'info');
+  }
+}
+
+function restoreHistoryState(state) {
+  // Temporarily disable history saving during restore
+  const shouldSaveHistory = false;
+  
+  Object.entries(state.inputs).forEach(([key, value]) => {
+    const input = document.getElementById(key);
+    if (input) input.value = value || (key === 'soThitBanhMi' ? 1 : '');
+  });
+  
+  calculateTotal();
+}
+
+// GitHub Analytics Integration
+const GITHUB_REPO = 'username/Tinh_bill'; // Thay bằng repo của bạn
+
+// Privacy-friendly analytics using GitHub Issues API
+async function trackUsageToGitHub(action, data = {}) {
+  // Chỉ track trong production và với user consent
+  if (location.hostname === 'localhost' || !localStorage.getItem('analytics-consent')) {
+    return;
+  }
+  
+  const analyticsData = {
+    action,
+    timestamp: new Date().toISOString(),
+    userAgent: navigator.userAgent.substring(0, 100),
+    ...data
+  };
+  
+  // Lưu local trước, sau đó có thể gửi batch
+  const localAnalytics = JSON.parse(localStorage.getItem('local-analytics') || '[]');
+  localAnalytics.push(analyticsData);
+  
+  // Giữ tối đa 50 records
+  if (localAnalytics.length > 50) {
+    localAnalytics.splice(0, localAnalytics.length - 50);
+  }
+  
+  localStorage.setItem('local-analytics', JSON.stringify(localAnalytics));
+}
+
+// Feature Usage Tracking
+function trackFeatureUsage(feature) {
+  trackUsageToGitHub('feature_used', { feature });
+  
+  const features = JSON.parse(localStorage.getItem('feature-usage') || '{}');
+  features[feature] = (features[feature] || 0) + 1;
+  localStorage.setItem('feature-usage', JSON.stringify(features));
+}
+
+// Error Tracking
+window.addEventListener('error', (error) => {
+  trackUsageToGitHub('error', {
+    message: error.message,
+    filename: error.filename,
+    line: error.lineno
+  });
+});
+
+// Performance Tracking
+function trackPerformance() {
+  if ('performance' in window) {
+    const perf = performance.getEntriesByType('navigation')[0];
+    trackUsageToGitHub('performance', {
+      loadTime: Math.round(perf.loadEventEnd - perf.fetchStart),
+      domReady: Math.round(perf.domContentLoadedEventEnd - perf.fetchStart)
+    });
+  }
+}
+
+// Track on page load
+window.addEventListener('load', trackPerformance);
+
+// GitHub Issues Integration for Feedback
+function createFeedbackForm() {
+  const modal = document.createElement('div');
+  modal.className = 'feedback-modal';
+  modal.innerHTML = `
+    <div class="feedback-content">
+      <h3>📝 Góp ý cải tiến</h3>
+      <textarea id="feedbackText" placeholder="Chia sẻ ý kiến của bạn về ứng dụng..."></textarea>
+      <div class="feedback-buttons">
+        <button onclick="submitFeedback()" class="btn-primary">Gửi góp ý</button>
+        <button onclick="closeFeedback()" class="btn-secondary">Hủy</button>
+      </div>
+      <p class="feedback-note">Góp ý sẽ được gửi dưới dạng GitHub Issue</p>
+    </div>
+  `;
+  document.body.appendChild(modal);
+  setTimeout(() => modal.classList.add('show'), 10);
+}
+
+function submitFeedback() {
+  const feedback = document.getElementById('feedbackText').value.trim();
+  if (!feedback) {
+    showNotification('Vui lòng nhập nội dung góp ý', 'error');
+    return;
+  }
+  
+  // Create GitHub Issue URL
+  const title = `[Feedback] Góp ý từ người dùng - ${new Date().toLocaleDateString('vi-VN')}`;
+  const body = `
+## Góp ý từ người dùng
+
+**Nội dung:** ${feedback}
+
+**Thông tin kỹ thuật:**
+- Thời gian: ${new Date().toLocaleString('vi-VN')}
+- User Agent: ${navigator.userAgent}
+- URL: ${window.location.href}
+- Viewport: ${window.innerWidth}x${window.innerHeight}
+
+---
+*Góp ý được tạo tự động từ ứng dụng*
+  `;
+  
+  const githubUrl = `https://github.com/${GITHUB_REPO}/issues/new?title=${encodeURIComponent(title)}&body=${encodeURIComponent(body)}&labels=feedback,user-generated`;
+  
+  window.open(githubUrl, '_blank');
+  closeFeedback();
+  showNotification('✅ Đã mở trang tạo góp ý trên GitHub', 'success');
+  trackFeatureUsage('feedback_submitted');
+}
+
+function closeFeedback() {
+  const modal = document.querySelector('.feedback-modal');
+  if (modal) {
+    modal.classList.remove('show');
+    setTimeout(() => modal.remove(), 300);
+  }
+}
