@@ -3,36 +3,43 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Ứng dụng tính tiền đơn giản và nhanh chóng cho quán ăn" />
+  <meta name="theme-color" content="#ffffff" id="theme-color">
   <title>TÔI TỰ TÍNH</title>
+  
+  <!-- Preload critical assets -->
+  <link rel="preload" href="assets/logo.svg" as="image" />
+  <link rel="preload" href="style.css" as="style" />
+  <link rel="preload" href="script.js" as="script" />
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="assets/logo.svg" />
+  
+  <!-- Styles -->
   <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+  
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
-  <meta name="theme-color" content="#ffffff" id="theme-color">
-  <meta name="description" content="Tính tiền cho quán bánh mì">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="format-detection" content="telephone=no">
-  <script defer src="https://cdn.jsdelivr.net/npm/@szmarczak/interact.js@1.4.11/dist/interact.min.js"></script>
 </head>
 <body>
   <div class="container touch-container">
     <div class="theme-switch">
-      <button id="themeSwitcher" class="theme-btn">
-        <i class="fas fa-moon"></i>
+      <button id="themeSwitcher" class="theme-btn" aria-label="Chuyển đổi giao diện sáng/tối">
+        <i class="fas fa-moon" aria-hidden="true"></i>
       </button>
     </div>
-    <img src="assets/logo.svg" alt="TÔI TỰ TÍNH" class="logo-img">
+    
+    <img src="assets/logo.svg" alt="TÔI TỰ TÍNH" class="logo-img" width="270" height="auto">
 
     <div class="item">
       <div class="label">
         THỊT
         <span class="price">(11.000đ)</span>
       </div>
-      <div class="input-touch-target">
-        <!-- Thêm aria-label cho các input -->
-        <input type="number" id="thit" aria-label="Số lượng thịt" />
-      </div>
+      <input type="number" id="thit" inputmode="numeric" pattern="[0-9]*" aria-label="Số lượng thịt" />
     </div>
 
     <div class="item">
@@ -40,9 +47,7 @@
         BÁNH MÌ MẬT
         <span class="price">(6.000đ)</span>
       </div>
-      <div class="input-touch-target">
-        <input type="number" id="banhMiMat" />
-      </div>
+      <input type="number" id="banhMiMat" inputmode="numeric" pattern="[0-9]*" aria-label="Số lượng bánh mì mật" />
     </div>
 
     <div class="item">
@@ -50,9 +55,7 @@
         NEM NƯỚNG
         <span class="price">(7.000đ)</span>
       </div>
-      <div class="input-touch-target">
-        <input type="number" id="nemNuong" />
-      </div>
+      <input type="number" id="nemNuong" inputmode="numeric" pattern="[0-9]*" aria-label="Số lượng nem nướng" />
     </div>
 
     <div class="item">
@@ -60,40 +63,39 @@
         NƯỚC
         <span class="price">(10.000đ)</span>
       </div>
-      <div class="input-touch-target">
-        <input type="number" id="nuoc" />
-      </div>
+      <input type="number" id="nuoc" inputmode="numeric" pattern="[0-9]*" aria-label="Số lượng nước" />
     </div>
 
     <div class="item">
       <div class="label">
         BÁNH MÌ KẸP THỊT
-        <span class="price">(3000đ bánh + thịt)</span>
+        <span class="price">(3.000đ bánh + thịt)</span>
       </div>
-      <div class="input-touch-target">
-        <input type="number" id="banhMiThit" />
-      </div>
+      <input type="number" id="banhMiThit" inputmode="numeric" pattern="[0-9]*" aria-label="Số lượng bánh mì kẹp thịt" />
     </div>
 
     <div class="item" id="soThitBanhMiItem" style="display: none;">
       <div class="label">
         SỐ THỊT/BÁNH
       </div>
-      <input type="number" id="soThitBanhMi" value="1" min="1" max="4" />
+      <input type="number" id="soThitBanhMi" value="1" min="1" max="4" inputmode="numeric" pattern="[0-9]*" aria-label="Số thịt trên mỗi bánh" />
     </div>
+
     <div id="totalContainer" style="display: none;">
-      <div class="total" id="total">TỔNG TIỀN: 0 VND</div>
+      <div class="total" id="total" role="button" tabindex="0" aria-label="Tổng tiền">TỔNG TIỀN: 0 VND</div>
       <div class="change-calculator">
-        <input type="number" id="customerPay" placeholder="Khách trả" />
-        <div class="amount-suggestions" id="amountSuggestions"></div>
-        <div id="change" class="change-amount"></div>
+        <div class="section-title">💰 Tính tiền thối</div>
+        <input type="number" id="customerPay" placeholder="Khách trả" inputmode="numeric" pattern="[0-9]*" aria-label="Số tiền khách trả" />
+        <div class="amount-suggestions" id="amountSuggestions" role="listbox" aria-label="Gợi ý số tiền"></div>
+        <div id="change" class="change-amount" aria-live="polite"></div>
       </div>
-      <div id="subtotals"></div>
+      <div id="subtotals" role="list" aria-label="Chi tiết hóa đơn"></div>
     </div>
+
     <div class="action-btns">
-      <button onclick="clearAll()" class="haptic">XÓA</button>
-      <button id="restoreBtn" class="restore-btn haptic" title="Nhập lại dữ liệu vừa xoá">
-        <i class="fa-solid fa-rotate-right"></i>
+      <button onclick="clearAll()" class="haptic" aria-label="Xóa tất cả">XÓA</button>
+      <button id="restoreBtn" class="restore-btn haptic" title="Nhập lại dữ liệu vừa xoá" aria-label="Khôi phục dữ liệu">
+        <i class="fa-solid fa-rotate-right" aria-hidden="true"></i>
       </button>
     </div>
   </div>
@@ -104,8 +106,11 @@
       <span id="scramble-text-original" style="display:none;">Trang web được tạo bởi TOVTK.DEV với sự trợ giúp của Github Copilot</span>
     </div>
   </footer>
-  <script src="script.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrambleTextPlugin.min.js"></script>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@szmarczak/interact.js@1.4.11/dist/interact.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrambleTextPlugin.min.js" defer></script>
+  <script src="script.js" defer></script>
 </body>
 </html>
