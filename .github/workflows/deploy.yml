@@ -27,16 +27,10 @@ jobs:
         
       - name: Setup Pages
         uses: actions/configure-pages@v4
-        
-      - name: Optimize assets
+          - name: Optimize assets (optional)
         run: |
-          # Minify CSS
-          npx csso style.css --output style.min.css
-          # Minify JS
-          npx terser script.js --output script.min.js --compress --mangle
-          # Update HTML to use minified files
-          sed -i 's/style.css/style.min.css/g' index.html
-          sed -i 's/script.js/script.min.js/g' index.html
+          # Skip minification to avoid issues
+          echo "Assets optimization skipped"
           
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
