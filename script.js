@@ -424,6 +424,8 @@ function initializeCustomerPaymentVisibility() {
 }
 
 // Clean up on page unload
+// Previously this removed the saved state, which prevented session persistence.
+// Removing the localStorage.clear ensures the bill data remains after reloads.
 window.addEventListener('unload', () => {
-  localStorage.removeItem(APP_STATE_KEY);
+  saveState();
 });
