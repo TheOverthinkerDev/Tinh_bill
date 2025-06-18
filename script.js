@@ -15,14 +15,7 @@ const themeColor = document.getElementById('theme-color');
 const customerPayInput = document.getElementById('customerPay');
 const changeDisplay = document.getElementById('change');
 
-// Price constants
-const PRICES = {
-  thit: 11000,
-  banhMiMat: 6000,
-  nemNuong: 7000,
-  nuoc: 10000,
-  banhMiThitBase: 3000
-};
+// Price constants are provided by calc.js
 
 // State management
 let lastClearedData = null;
@@ -164,30 +157,14 @@ function calculateTotal() {
   const banhMiThit = parseInt(banhMiThitInput.value) || 0;
   const soThitBanhMi = parseInt(soThitBanhMiInput.value) || 1;
 
-  let total = 0;
-  const subtotals = [];
-
-  // Calculate individual totals
-  const thitSubtotal = thit * PRICES.thit;
-  if (thit > 0) subtotals.push({ label: 'Thịt', value: thitSubtotal });
-
-  const banhMiMatSubtotal = banhMiMat * PRICES.banhMiMat;
-  if (banhMiMat > 0) subtotals.push({ label: 'Bánh mì mật', value: banhMiMatSubtotal });
-
-  const nemNuongSubtotal = nemNuong * PRICES.nemNuong;
-  if (nemNuong > 0) subtotals.push({ label: 'Nem nướng', value: nemNuongSubtotal });
-
-  const nuocSubtotal = nuoc * PRICES.nuoc;
-  if (nuoc > 0) subtotals.push({ label: 'Nước', value: nuocSubtotal });
-
-  const banhMiThitSubtotal = banhMiThit * (PRICES.banhMiThitBase + ((soThitBanhMi - 1) * PRICES.thit));
-  if (banhMiThit > 0) {
-    let label = 'Bánh mì kẹp thịt';
-    if (soThitBanhMi > 1) label += ` (${soThitBanhMi} thịt/bánh)`;
-    subtotals.push({ label, value: banhMiThitSubtotal });
-  }
-
-  total = thitSubtotal + banhMiMatSubtotal + nemNuongSubtotal + nuocSubtotal + banhMiThitSubtotal;
+  const { total, subtotals } = calculateTotals({
+    thit,
+    banhMiMat,
+    nemNuong,
+    nuoc,
+    banhMiThit,
+    soThitBanhMi
+  });
 
   // Show/hide soThitBanhMi section
   if (banhMiThit > 0) {
