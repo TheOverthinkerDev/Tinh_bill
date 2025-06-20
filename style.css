@@ -427,8 +427,8 @@ h1 {
 /* Logo chính trên đầu trang */
 .logo-img {
   display: block;
-  margin: 0 auto 1rem auto;
-  max-width: 270px;
+  margin: 0 auto 1rem auto;      /* <-- chỉnh khoảng cách trên/dưới logo tại đây (giảm margin dưới, bỏ margin trên) */
+  max-width: 270px; /* Giữ nguyên logo */
   height: auto;
   transition: all var(--transition-normal);
   filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
@@ -457,24 +457,6 @@ h1 {
     contrast(1.1)
     drop-shadow(0 6px 12px rgba(46,204,64,0.4));
 }
-
-/* Animation cho logo khi load trang */
-@keyframes logoFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-20px) scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-.logo-img {
-  animation: logoFadeIn 0.8s ease-out;
-}
-
-
 
 /* Footer nhỏ cuối trang */
 .footer {

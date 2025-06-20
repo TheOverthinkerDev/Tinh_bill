@@ -179,8 +179,7 @@ function calculateTotal() {
 
   const nuocSubtotal = nuoc * PRICES.nuoc;
   if (nuoc > 0) subtotals.push({ label: 'Nước', value: nuocSubtotal });
-
-  const banhMiThitSubtotal = banhMiThit * (PRICES.banhMiThitBase + ((soThitBanhMi - 1) * PRICES.thit));
+  const banhMiThitSubtotal = banhMiThit * (PRICES.banhMiThitBase + (soThitBanhMi * PRICES.thit));
   if (banhMiThit > 0) {
     let label = 'Bánh mì kẹp thịt';
     if (soThitBanhMi > 1) label += ` (${soThitBanhMi} thịt/bánh)`;
@@ -427,3 +426,4 @@ function initializeCustomerPaymentVisibility() {
 window.addEventListener('unload', () => {
   localStorage.removeItem(APP_STATE_KEY);
 });
+
