@@ -15,14 +15,7 @@ const themeColor = document.getElementById('theme-color');
 const customerPayInput = document.getElementById('customerPay');
 const changeDisplay = document.getElementById('change');
 
-// Price constants
-const PRICES = {
-  thit: 11000,
-  banhMiMat: 6000,
-  nemNuong: 7000,
-  nuoc: 10000,
-  banhMiThitBase: 3000
-};
+// Price constants are provided by calc.js
 
 // State management
 let lastClearedData = null;
@@ -179,7 +172,8 @@ function calculateTotal() {
 
   const nuocSubtotal = nuoc * PRICES.nuoc;
   if (nuoc > 0) subtotals.push({ label: 'Nước', value: nuocSubtotal });
-  const banhMiThitSubtotal = banhMiThit * (PRICES.banhMiThitBase + (soThitBanhMi * PRICES.thit));
+
+  const banhMiThitSubtotal = banhMiThit * (PRICES.banhMiThitBase + ((soThitBanhMi - 1) * PRICES.thit));
   if (banhMiThit > 0) {
     let label = 'Bánh mì kẹp thịt';
     if (soThitBanhMi > 1) label += ` (${soThitBanhMi} thịt/bánh)`;
@@ -423,7 +417,9 @@ function initializeCustomerPaymentVisibility() {
 }
 
 // Clean up on page unload
+// Previously this removed the saved state, which prevented session persistence.
+// Removing the localStorage.clear ensures the bill data remains after reloads.
 window.addEventListener('unload', () => {
-  localStorage.removeItem(APP_STATE_KEY);
+  saveState();
 });
 
