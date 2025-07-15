@@ -18,7 +18,7 @@ function calculateTotals({
   const banhMiMatSubtotal = banhMiMat * PRICES.banhMiMat;
   const nemNuongSubtotal = nemNuong * PRICES.nemNuong;
   const nuocSubtotal = nuoc * PRICES.nuoc;
-  const banhMiThitSubtotal = banhMiThit * (PRICES.banhMiThitBase + ((soThitBanhMi - 1) * PRICES.thit));
+  const banhMiThitSubtotal = banhMiThit * (PRICES.banhMiThitBase + (soThitBanhMi * PRICES.thit));
 
   const subtotals = [];
   if (thit > 0) subtotals.push({ label: 'Thịt', value: thitSubtotal });
